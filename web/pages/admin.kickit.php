@@ -24,6 +24,19 @@
 		Licensed under CC BY-NC-SA 3.0
 		Page: <http://www.sourcebans.net/> - <http://www.gameconnect.net/>
 *************************************************************************/
+include_once("../includes/adodb/adodb.inc.php");
+include_once("../includes/adodb/adodb-errorhandler.inc.php");
+
+
+define('DB_HOST', 'localhost');   					// The host/ip to your SQL server
+define('DB_USER', 'root');						// The username to connect with
+define('DB_PASS', '123e$2342');						// The password
+define('DB_NAME', 'sourcebans');  						// Database name	
+define('DB_PREFIX', 'sb');					// The table prefix for SourceBans
+define('DB_PORT','3306');							// The SQL port (Default: 3306)
+define('STEAMAPIKEY','');				// Steam API Key for Shizz
+define('SB_WP_URL','http://cod4narod.ru/sourcebans/');       				//URL of SourceBans Site
+define('SB_EMAIL','pvolkv@gmail.com');  
 
 include_once '../init.php';
 
@@ -70,6 +83,18 @@ function LoadServers($check, $type) {
 }
 
 function KickPlayer($check, $sid, $num, $type) {
+	
+		$parts = array("0", "0", "0");
+
+	if(strpos($check, "STEAM_") === 0)
+	{
+		$parts = explode(":", substr($check, 6));
+	}
+
+	$friendid = $GLOBALS['db']->GetRow("SELECT (((CAST('".$parts[0]."' AS UNSIGNED) + CAST('1' AS UNSIGNED)) << CAST('56' AS UNSIGNED)) | CAST('1' AS UNSIGNED) << CAST('52' AS UNSIGNED) | CAST('1' AS UNSIGNED) << CAST('32' AS UNSIGNED) | CAST('".$parts[1]."' AS UNSIGNED) & CAST('1' AS UNSIGNED) | CAST('".$parts[2]."' AS UNSIGNED) << CAST('1' AS UNSIGNED)) AS friend_id");
+	$check = $friendid["friend_id"];
+	
+	
 	$objResponse = new xajaxResponse();
 	global $userbank, $username;
 	$sid = (int)$sid;

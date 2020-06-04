@@ -37,7 +37,7 @@ define('SB_URL', SB_WP_URL);
 function steamOauth() {
     $openid = new LightOpenID(SB_HOST);
     if(!$openid->mode) {
-        $openid->identity = 'http://steamcommunity.com/openid';
+        $openid->identity = 'https://steamcommunity.com/openid';
         header("Location: " .$openid->authUrl() );
         exit();
     }
@@ -47,7 +47,7 @@ function steamOauth() {
     } else {
         if($openid->validate()) {
             $id = $openid->identity;
-            $ptn = "/^http:\/\/steamcommunity\.com\/openid\/id\/(7[0-9]{15,25}+)$/";
+            $ptn = "/^https:\/\/steamcommunity\.com\/openid\/id\/(7[0-9]{15,25}+)$/";
             preg_match($ptn, $id, $matches);
 
             if(!empty($matches[1])){ return $matches[1]; }
